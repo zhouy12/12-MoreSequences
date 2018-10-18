@@ -28,10 +28,10 @@ def main():
     # ------------------------------------------------------------------
 
     run_test_generate_points_on_circle()
-    # run_test_draw_points_on_circle()
-    # run_test_pizza()
-    # run_test_polygon()
-    # run_test_fancy_polygon()
+    run_test_draw_points_on_circle()
+    run_test_pizza()
+    run_test_polygon()
+    run_test_fancy_polygon()
 
 
 def run_test_generate_points_on_circle():
@@ -185,10 +185,10 @@ def run_test_draw_points_on_circle():
     # ------------------------------------------------------------------
     # Test 4:  (YOU write THIS test)
     # ------------------------------------------------------------------
-    title = 'DRAW_POINTS_ON_CIRCLE, test 4:  5 red dots.'
-    window = rg.RoseWindow(400, 400, title)
-    circle = rg.Circle(rg.Point(200, 200), 150)
-    draw_points_on_circle(window, circle, 5, 'red')
+    title = 'DRAW_POINTS_ON_CIRCLE, test 4:  5 purple dots.'
+    window = rg.RoseWindow(300, 300, title)
+    circle = rg.Circle(rg.Point(150, 150), 20)
+    draw_points_on_circle(window, circle, 5, 'purple')
     window.close_on_mouse_click()
 
 def draw_points_on_circle(window, circle, number_of_points, color):
@@ -237,14 +237,16 @@ def draw_points_on_circle(window, circle, number_of_points, color):
     # Your professor may do this exercise with you as "live coding".
     # ------------------------------------------------------------------
     circle.attach_to(window)
-    points = generate_points_on_circle(circle, number_of_points)
-    for k in range(len(points)):
-        center = points[k]
-        circle = rg.Circle(center, 10)
-        circle.fill_color = color
-        circle.attach_to(window)
-        center.attach_to(window)
-        window.render()
+    for k in range(number_of_points):
+        degree = 2 * math.pi / number_of_points * (k + 1)
+        x = circle.center.x + circle.radius * math.cos(degree)
+        y = circle.center.y + circle.radius * math.sin(degree)
+        p1 = rg.Point(x, y)
+        cir1 = rg.Circle(p1, 10)
+        cir1.fill_color = color
+        cir1.attach_to(window)
+        p1.attach_to(window)
+    window.render()
 
 def run_test_pizza():
     """ Tests the   pizza   function. """
@@ -291,6 +293,14 @@ def run_test_pizza():
     #     -- a large number of thin black lines
     #     -- on a yellow-filled circle.
     # ------------------------------------------------------------------
+    # Test 4:
+    title = 'PIZZA test 4:  5 slices, thin (thickness=3) blue lines.'
+    window = rg.RoseWindow(400, 400, title)
+    circle = rg.Circle(rg.Point(300, 200), 150)
+    circle.outline_thickness = 5
+    circle.fill_color = 'yellow'
+    pizza(window, circle, 200, 'black', 1)
+    window.close_on_mouse_click()
 
 
 def pizza(window, circle, number_of_slices, color, thickness):
@@ -331,6 +341,15 @@ def pizza(window, circle, number_of_slices, color, thickness):
     #    (defined above) to generate the relevant points,
     #    and then draw lines that are based in part on those points.
     # ------------------------------------------------------------------
+    circle.attach_to(window)
+    list = generate_points_on_circle(circle, number_of_slices)
+    for k in range(number_of_slices):
+        start = list[k]
+        slice = rg.Line(start, circle.center)
+        slice.attach_to(window)
+        slice.color = color
+        slice.thickness = thickness
+    window.render()
 
 
 def run_test_polygon():
@@ -367,6 +386,13 @@ def run_test_polygon():
     # ------------------------------------------------------------------
     # Test 3:  (YOU write THIS test)
     # ------------------------------------------------------------------
+    title = 'POLYGON tests 3:  4 segments with thick black lines'
+    window = rg.RoseWindow(550, 400, title)
+    circle = rg.Circle(rg.Point(200, 200), 150)
+    circle.outline_thickness = 3
+    circle.fill_color = 'lime green'
+    polygon(window, circle, 4, 'black', 5)
+    window.continue_on_mouse_click()
 
 
 def polygon(window, circle, number_of_segments, color, thickness):
@@ -408,6 +434,19 @@ def polygon(window, circle, number_of_segments, color, thickness):
     #    (defined above) to generate the relevant points,
     #    and then draw lines that are based in part on those points.
     # ------------------------------------------------------------------
+    circle.attach_to(window)
+    list = generate_points_on_circle(circle, number_of_segments)
+    for k in range(number_of_segments):
+        start = list[k]
+        if k == number_of_segments - 1:
+            end = list[0]
+        else:
+            end = list[k + 1]
+        line = rg.Line(start, end)
+        line.color = color
+        line.thickness = thickness
+        line.attach_to(window)
+    window.render()
 
 
 def run_test_fancy_polygon():
@@ -458,6 +497,29 @@ def run_test_fancy_polygon():
     #   For all these, filling the circles with one color and using
     #   a contrasting color for the lines makes them especially pretty.
     # ------------------------------------------------------------------
+    # Test 4 (on another window):
+    title = 'FANCY POLYGON test 4:  20 blue lines' + \
+            ' on a lime green circle, hops = 5.'
+    window = rg.RoseWindow(480, 350, title)
+
+    circle = rg.Circle(rg.Point(240, 165), 150)
+    circle.fill_color = 'lime green'
+    fancy_polygon(window, circle, 20, 5, 'blue', 5)
+    window.continue_on_mouse_click()
+
+    title = 'FANCY POLYGON test 4:  51 red lines' + \
+            ' on white circle, hops = 25.'
+    circle = rg.Circle(rg.Point(240, 165), 150)
+    circle.fill_color = 'white'
+    fancy_polygon(window, circle, 51, 25, 'red', 1)
+    window.continue_on_mouse_click()
+
+    title = 'FANCY POLYGON test 4:  300 black lines' + \
+            ' on yellow circle, hops = 61.'
+    circle = rg.Circle(rg.Point(240, 165), 150)
+    circle.fill_color = 'yellow'
+    fancy_polygon(window, circle, 300, 61, 'black', 1)
+    window.close_on_mouse_click()
 
 
 def fancy_polygon(window, circle, number_of_lines, hops_to_next_point, color, thickness):
@@ -531,6 +593,20 @@ def fancy_polygon(window, circle, number_of_lines, hops_to_next_point, color, th
     #       appropriately.  ASK YOUR INSTRUCTOR FOR AN EXAMPLE.
     ####################################################################
     # ------------------------------------------------------------------
+    circle.attach_to(window)
+    list = generate_points_on_circle(circle, number_of_lines)
+    for k in range(number_of_lines):
+        start = list[k]
+        if k + hops_to_next_point >= number_of_lines:
+            end = list[k + hops_to_next_point - number_of_lines]
+        else:
+            end = list[k + hops_to_next_point]
+        line = rg.Line(start, end)
+        line.color = color
+        line.thickness = thickness
+        line.arrow = 'last'
+        line.attach_to(window)
+    window.render()
 
 
 # ----------------------------------------------------------------------
